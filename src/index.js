@@ -1,27 +1,16 @@
 require('dotenv').config();
-const {Client, IntentsBitField} = require('discord.js');
+const { Client, IntentsBitField } = require('discord.js');
+const eventHandler = require('./handlers/eventHandler');
 
 const client = new Client({
-    intents: [
-        IntentsBitField.Flags.Guilds,
-        IntentsBitField.Flags.GuildMembers,
-        IntentsBitField.Flags.GuildMessages,
-        IntentsBitField.Flags.MessageContent,
-    ]
+  intents: [
+    IntentsBitField.Flags.Guilds,
+    IntentsBitField.Flags.GuildMembers,
+    IntentsBitField.Flags.GuildMessages,
+    IntentsBitField.Flags.MessageContent,
+  ],
 });
 
-client.on('ready', (c) => {
-    console.log(`${c.user.username} is online`); 
-});
-
-client.on('messageCreate', (message) => {
-    if (message.author.bot) {
-      return;
-    }
-  
-    if (message.content === 'hello') {
-      message.reply('hello');
-    }
-  });
+eventHandler(client);
 
 client.login(process.env.DISCORD_TOKEN);
