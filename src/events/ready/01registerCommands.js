@@ -1,69 +1,82 @@
-const { testServer } = require('../../../config.json');
-const areCommandsDifferent = require('../../utils/areCommandsDifferent');
-const getApplicationCommands = require('../../utils/getApplicationCommands');
-const getLocalCommands = require('../../utils/getLocalCommands');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+const { getLocalCommands, getApplicationCommands } = require('../../utils/getCommands');
 
-module.exports = async (client) => {
+// registers all the commands with the server
+module.exports = async client => {
   try {
+
+    // gets the local commands (files)
     const localCommands = getLocalCommands();
+    const commands = [];
+
+    // gets the commands on the server
     const applicationCommands = await getApplicationCommands(
       client,
-      testServer
+      process.env.SERVER_ID
     );
 
-    for (const localCommand of localCommands) {
-      const { name, description, options } = localCommand;
+    const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 
-      const existingCommand = await applicationCommands.cache.find(
-        (cmd) => cmd.name === name
-      );
+    //debug to delete all commands
+    if (false) {
+      //delete commands 
+      rest.put(Routes.applicationGuildCommands(clientId, process.env.SERVER_ID), { body: [] })
+        .then(() => { return 'Successfully deleted all guild commands.' })
+        .catch(console.error);
 
-      if (existingCommand) {
-        if (localCommand.deleted) {
-          await applicationCommands.delete(existingCommand.id);
-          console.log(`🗑 Deleted command "${name}".`);
-          continue;
-        }
-
-        if (areCommandsDifferent(existingCommand, localCommand)) {
-          await applicationCommands.edit(existingCommand.id, {
-            description,
-            options,
-          });
-
-          console.log(`🔁 Edited command "${name}".`);
-        }
-      }
-
-      else {
-        if (localCommand.deleted) {
-          console.log(
-            `⏩ Skipping registering command "${name}" as it's set to delete.`
-          );
-          continue;
-        }
-
-        await applicationCommands.create({
-          name,
-          description,
-          options,
-        });
-
-        console.log(`👍 Registered command "${name}."`);
-      }
+      // for global commands
+      rest.put(Routes.applicationCommands(clientId), { body: [] })
+        .then(() => { return 'Successfully deleted all application commands.' })
+        .catch(console.error);
     }
+
+
+    // loop through each command in files
+    for (const localCommand of localCommands) {
+      const { name } = localCommand.data;
+
+      // check if its deleted in the file, if so, remove it
+      if (localCommand.options?.deleted) {
+        console.log(`🗑 Deleted command "${name}".`);
+        continue;
+      }
+
+      // otherwise add it to the server as its not there
+      commands.push(localCommand.data);
+
+      console.log(`👍 Registered command "${name}."`);
+    }
+
 
     // remove commands that no longer exist
     for (const command of applicationCommands.cache) {
       const id = command[0];
       const appCommand = command[1];
-      if (!localCommands.find(c => c.name === appCommand.name)) {
+
+      if (!localCommands.find(c => c.data.name === appCommand.name)) {
+
         // server command does not exist here anymore
         await applicationCommands.delete(id);
         console.log(`🗑 Deleted command "${appCommand.name}".`);
       }
     }
-  } catch (error) {
-    console.log(`TThere was an error: ${error}`);
+
+    // Register the new Commands
+
+    console.log('Started refreshing application (/) commands.');
+
+    await rest.put(
+      Routes.applicationGuildCommands(client.application.id, process.env.SERVER_ID),
+      { body: commands },
+    );
+
+    console.log('Successfully reloaded application (/) commands.');
+
+  }
+  catch (error) {
+    console.log(`There was an error: ${error}`);
   }
 };
