@@ -10,7 +10,6 @@ module.exports = async ({interaction, embeds, time, introMessage}) => {
 
         introMessage = introMessage ?? '';
         time = time ?? 60000 * 5; //set time to be 5 minute by default
-        console.log(time);
         if(!interaction) {
             throw pageError(`Interaction is ${interaction}`);
         }

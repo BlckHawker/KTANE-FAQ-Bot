@@ -13,7 +13,6 @@ const getLocalCommands = (exceptions = []) =>{
         for (const commandFile of commandFiles) {
             const commandObject = require(commandFile);
             if (exceptions.includes(commandObject.data.name)) {
-                console.log("6a");
                 continue;
             }
 
