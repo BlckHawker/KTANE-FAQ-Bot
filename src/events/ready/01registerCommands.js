@@ -23,12 +23,12 @@ module.exports = async client => {
     //debug to delete all commands
     if (false) {
       //delete commands 
-      rest.put(Routes.applicationGuildCommands(clientId, process.env.SERVER_ID), { body: [] })
+      rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.SERVER_ID), { body: [] })
         .then(() => { return 'Successfully deleted all guild commands.' })
         .catch(console.error);
 
       // for global commands
-      rest.put(Routes.applicationCommands(clientId), { body: [] })
+      rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: [] })
         .then(() => { return 'Successfully deleted all application commands.' })
         .catch(console.error);
     }

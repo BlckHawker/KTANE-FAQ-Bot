@@ -4,9 +4,12 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('test')
 		.setDescription('Test command that provides information about the user.'),
-	async execute(client, interaction) {
-		// interaction.user is the object representing the User who ran the command
-		// interaction.member is the GuildMember object, which represents the user in the specific guild
+		options:
+    {
+        devOnly:  true,
+        deleted:  false,
+    },
+	async execute(_, interaction) {
 		await interaction.reply(`This command was run by ${interaction.user.username}, who joined on ${interaction.member.joinedAt}.`);
 	},
 };

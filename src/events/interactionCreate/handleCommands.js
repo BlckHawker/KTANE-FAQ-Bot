@@ -13,8 +13,6 @@ module.exports = async (client, interaction) =>{
 
         if (!commandObject) return;
 
-
-
         if (commandObject.options?.devOnly) {
             if (!process.env.DEV_IDS.includes(interaction.member.id)) {
                 interaction.reply({
@@ -25,21 +23,12 @@ module.exports = async (client, interaction) =>{
             }
         }
 
-        if (commandObject.options?.testOnly) {
-            if (!(interaction.guild.id === process.env.TESTSERVER_ID)) {
-                interaction.reply({
-                    content:   'This command cannot be ran here.',
-                    ephemeral: true,
-                });
-                return;
-            }
-        }
-
         if (commandObject.data.permissionsRequired?.length) {
             for (const permission of commandObject.permissionsRequired) {
+              
                 if (!interaction.member.permissions.has(permission)) {
                     interaction.reply({
-                        content:   'Not enough permissions.',
+                        content:   `You don't have enough permissions to run this command.`,
                         ephemeral: true,
                     });
                     return;
@@ -55,7 +44,7 @@ module.exports = async (client, interaction) =>{
 
                 if (!bot.permissions.has(permission)) {
                     interaction.reply({
-                        content:   "I don't have enough permissions.",
+                        content:   "I don't have enough permissions. Contact the owner of the bot.",
                         ephemeral: true,
                     });
                     return;

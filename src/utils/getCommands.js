@@ -27,8 +27,7 @@ const getLocalCommands = (exceptions = []) =>{
 // gets the application commands
 const getApplicationCommands = async(client, guildId)=>{
     let applicationCommands;
-
-    // if guild
+ 
     if (guildId) {
         const guild = await client.guilds.fetch(guildId);
         applicationCommands = guild.commands;
