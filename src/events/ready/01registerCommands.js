@@ -57,7 +57,6 @@ module.exports = async client => {
       const appCommand = command[1];
 
       if (!localCommands.find(c => c.data.name === appCommand.name)) {
-
         // server command does not exist here anymore
         await applicationCommands.delete(id);
         console.log(`🗑 Deleted command "${appCommand.name}".`);
