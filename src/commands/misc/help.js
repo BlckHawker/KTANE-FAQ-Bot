@@ -12,13 +12,7 @@ module.exports = {
         .setDescription('Understand the purpose of the bot and see a list of its command'),
 
     async execute(client, interaction) {
-        
-        interaction.depher
-
-
-
         await interaction.deferReply();
-
 
         const serverObject = utils.getDataServerObject(interaction.guild.id);
         //if the server object is undefined, then send an error to notify the admins to use the set up command 
@@ -33,7 +27,7 @@ module.exports = {
             return;
         }
 
-        const introMessage = `This bot's purpose is to answer frequently asked questions about modding KTANE. Its goal is to alleviate answering duplicate questions in <#${server.modCreationId}> and <#${server.repoDiscussionId}>. Please try to see if your question(s) are answered here before asking there. Please report any bugs or suggestions about the bot via a [github issue](https://github.com/BlckHawker/KTANE-FAQ-Bot/issues).`;
+        const introMessage = `Hi ${interaction.user.globalName},\nThis bot's purpose is to answer frequently asked questions about modding KTANE. Its goal is to alleviate answering duplicate questions in <#${server.modCreationId}> and <#${server.repoDiscussionId}>. Please try to see if your question(s) are answered here before asking there. Please report any bugs or suggestions about the bot via a [github issue](https://github.com/BlckHawker/KTANE-FAQ-Bot/issues).`;
         const embeds = [];
         const pageDescription = [];
         for (let i = 0; i < 4; i++) {
