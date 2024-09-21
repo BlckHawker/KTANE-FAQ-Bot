@@ -20,9 +20,9 @@ const automatic = async (interaction) => {
     const invalidChannelNames = [];
 
     //find all of the targeted channels
-    for(const name of channelNames) {
+    for (const name of channelNames) {
         const channel = channels.find(channel => channel.name === name);
-        if(channel) {
+        if (channel) {
             validChannels.push(channel);
         }
 
@@ -37,7 +37,7 @@ const automatic = async (interaction) => {
     if (invalidChannelNames.length === 0) {
 
         const channelIds = validChannels.map(channel => channel.id);
-        message = saveChannelIds(channelNames, channelIds, serverId);
+        message = saveChannelIds(channelIds, serverId);
     }
 
     //if not all the channels weren't found, send a warning
@@ -51,7 +51,6 @@ const automatic = async (interaction) => {
 }
 const manual = (interaction) => {
     //set the channels
-    const cn = interaction.options._hoistedOptions.map(option => option.name);
     const channelIds = interaction.options._hoistedOptions.map(option => option.value);
 
     //verify none of the channels are the same
@@ -61,19 +60,19 @@ const manual = (interaction) => {
     }
 
     //save the data
-    let message = saveChannelIds(cn, channelIds, interaction.guild.id);
-    
+    let message = saveChannelIds(channelIds, interaction.guild.id);
+
     interaction.editReply({
         content: message,
     });
 }
 
 //helper method that saves the ids of the relevant channels to data.json. Returns the success message;
-const saveChannelIds = (channelNames, channelIds, serverId) => {
+const saveChannelIds = (channelIds, serverId) => {
     const dataVariableNames = channelNames.map(name => {
         const channelNameSegments = name.split('-');
         let str = channelNameSegments[0];
-        for(let i = 1; i < channelNameSegments.length; i++) {
+        for (let i = 1; i < channelNameSegments.length; i++) {
             const segment = channelNameSegments[i];
             str += segment.toUpperCase()[0] + segment.toLowerCase().substring(1);
         }
@@ -81,46 +80,42 @@ const saveChannelIds = (channelNames, channelIds, serverId) => {
         return str + "Id";
     });
 
-    const {serverObjIndex, server } = utils.getDataServerObject(serverId);
+    const { serverObjIndex, server } = utils.getDataServerObject(serverId);
     const messageSuccess = [];
-        for(let i = 0; i < dataVariableNames.length; i++) {
-            server[dataVariableNames[i]] = channelIds[i];
-            messageSuccess.push(`- ${channelNames[i]}: <#${channelIds[i]}>`)
-        }
- 
-        data.servers[serverObjIndex] = server;
+    for (let i = 0; i < dataVariableNames.length; i++) {
+        server[dataVariableNames[i]] = channelIds[i];
+        messageSuccess.push(`- ${channelNames[i]}: <#${channelIds[i]}>`)
+    }
 
-        ///save to data.json
-        utils.writeData(data);
-        
-        return `Successfully set: \n${messageSuccess.join("\n")}`;
+    data.servers[serverObjIndex] = server;
+
+    ///save to data.json
+    utils.writeData(data);
+
+    return `Successfully set: \n${messageSuccess.join("\n")}`;
 }
 
-module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('set-channels')
-        .setDescription('(admin only) Sets the relevant channels')
-        .addSubcommand(subcommand =>
-            subcommand
-                .setName('manual')
-                .setDescription('(admin only) Give the relevant channels as parameters')
-                .addChannelOption(option =>
-                    option.setName('mod-creation')
-                        .setDescription('The channel that will be set as mod-creation')
-                        .setRequired(true))
-                .addChannelOption(option =>
-                    option.setName('repo-requests')
-                        .setDescription('The channel that will be set as repo-requests')
-                        .setRequired(true))
-                .addChannelOption(option =>
-                    option.setName('repo-discussion')
-                        .setDescription('The channel that will be set as repo-discussion')
-                        .setRequired(true)))
-        .addSubcommand(subcommand =>
-            subcommand
-                .setName('automatic')
-                .setDescription('(admin only) Finds the relevant channels based on their names')),
+//make the slash command
+const slashCommand = new SlashCommandBuilder()
+    .setName('set-channels')
+    .setDescription('(admin only) Sets the relevant channels')
+    .addSubcommand(subcommand =>
+        subcommand
+            .setName('automatic')
+            .setDescription('(admin only) Finds the relevant channels based on their names'))
+    .addSubcommand(subcommand =>
+        subcommand
+            .setName('manual')
+            .setDescription('(admin only) Give the relevant channels as parameters'));
 
+//dynamically add add parameters to the manual subcommand
+channelNames.map(channelName => slashCommand.options[1].addChannelOption(option =>
+    option.setName(channelName)
+        .setDescription(`The channel that will be set as ${channelName}}`)
+        .setRequired(true)))
+
+module.exports = {
+    data: slashCommand,
     async execute(client, interaction) {
         await interaction.deferReply({
             ephemeral: true
