@@ -21,8 +21,6 @@ module.exports = async ({interaction, embeds, time, introMessage}) => {
             throw pageError(`Embeds has a length of 0`);
         }
 
-        await interaction.deferReply();
-
         if(embeds.length === 1) {
             return await interaction.editReply({embeds: embeds, components: [], fetchReply: true });
         }

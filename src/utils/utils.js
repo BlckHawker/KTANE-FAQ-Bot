@@ -11,7 +11,11 @@ const writeData = (data) => {
 
 //get a server object based on the id
 const getDataServerObject = (serverId) => {
+
     const serverObjIndex = data.servers.findIndex(obj => obj.serverId === serverId);
+    if(serverObjIndex) {
+        return undefined;
+    }
     const server = data.servers[serverObjIndex];
 
     return { serverObjIndex, server };

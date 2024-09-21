@@ -11,6 +11,8 @@ function removeDuplicates(arr) {
     return arr.filter(function (item, pos) { return arr.indexOf(item) == pos; })
 }
 
+//todo: if the server object can't be found, make it (probably a util function since it should be the same as what's happens when the bot joins the server)
+
 const automatic = async (interaction) => {
     //finds the channels by their name
     const serverId = interaction.guild.id;
