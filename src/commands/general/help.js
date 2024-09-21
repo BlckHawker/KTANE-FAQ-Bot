@@ -3,11 +3,6 @@ const pagination = require('../../utils/pagination');
 const utils = require('../../utils/utils');
 const questionJSON = require('../../questions.json');
 
-const categoriesPerPage = 5;
-const setUpWarning = (interaction) => {
-    interaction.editReply("The bot has not set up for this server. Please contact an admin and instruct them to use the **set-channels** command.");
-}
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')
@@ -19,13 +14,13 @@ module.exports = {
         const serverObject = utils.getDataServerObject(interaction.guild.id);
         //if the server object is undefined, then send an error to notify the admins to use the set up command 
         if (!serverObject) {
-            setUpWarning(interaction);
+            utils.setUpWarning(interaction);
             return;
         }
 
         const { server } = serverObject;
         if (!server.serverId || !server.modCreationId || !server.repoRequestsId || !server.repoDiscussionId) {
-            setUpWarning(interaction);
+            utils.setUpWarning(interaction);
             return;
         }
 

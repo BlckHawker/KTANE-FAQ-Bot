@@ -44,6 +44,9 @@ const addNewServer = (serverId) => {
 
 //replace placeholders text with their actual data
 const replacePlaceholders = (text, args = {}) => {
+
+    //modCreationId: server.modCreationId, repoDiscussionId: server.repoDiscussionId
+
     //{name} replaced with the user's username
     text = text.replaceAll("{name}", args.name);
 
@@ -80,10 +83,15 @@ const makeGroups = (arr) => {
     return groups;
 }
 
+const setUpWarning = (interaction) => {
+    interaction.editReply("The bot has not set up for this server. Please contact an admin and instruct them to use the **set-channels** command.");
+}
+
 module.exports = {
     writeData,
     getDataServerObject,
     addNewServer,
     replacePlaceholders,
-    makeGroups
+    makeGroups,
+    setUpWarning
 }
