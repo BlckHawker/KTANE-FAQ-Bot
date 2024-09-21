@@ -7,15 +7,19 @@ module.exports = (client, guild) => {
   const serverId = guild.id;
   const serverObject = utils.getDataServerObject(serverId);
   
-  //todo test this
+  //if the object doesn't exist, make it
   if(!serverObject) {
     utils.addNewServer(serverId);
   }
 
-  //todo test this
+  //overwrite the object to be just the serverId
   else {
-    data.server[serverId] = {}
+    const{ serverObjIndex } = serverObject;
+    data.servers[serverObjIndex] = {serverId}
+    console.log(data);
   }
+
+  //todo register commands here just in case 'ready' hasn't been called
 
   utils.writeData(data);
 };

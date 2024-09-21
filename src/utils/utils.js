@@ -25,22 +25,21 @@ const getDataServerObject = (serverId) => {
     return { serverObjIndex, server };
 }
 
+//add new/overwrite server to data.json
 const addNewServer = (serverId) => {
     
-    //todo if server doesn't exist, make a new one with this id
+    //if server doesn't exist, make a new one with this id
     if(!data.servers) {
         data.servers = [{ serverId }];
     }
 
-    //todo if the server does exist, add a new object
+    //if the server does exist, add a new object
     else {
         data.servers.push({ serverId });
     }
 
     writeData(data);
 }
-
-
 
 module.exports = {
     writeData,
