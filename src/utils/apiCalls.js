@@ -22,6 +22,15 @@ const getServerMember = async (userId) => {
     return await getAPICall(`${baseUrl}/guilds/${process.env.SERVER_ID}/members/${userId}`);
 }
 
+
+//Returns a list of guild channel objects given the guild id. Does not include threads.
+const getGuildChannels = async(guildId) => {
+    return await getAPICall(`${baseUrl}/guilds/${guildId}/channels`);
+    
+}
+
+
 module.exports = {
-    getServerMember
+    getServerMember,
+    getGuildChannels
 };

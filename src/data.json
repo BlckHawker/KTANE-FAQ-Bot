@@ -1,7 +1,10 @@
 {
   "servers": [
     {
-      "serverID": "366345987410886657"
+      "serverId": "366345987410886657",
+      "modCreationId": "366345987410886662",
+      "repoRequestsId": "1130291325703557281",
+      "repoDiscussionId": "1108810330773127199"
     }
   ]
 }
