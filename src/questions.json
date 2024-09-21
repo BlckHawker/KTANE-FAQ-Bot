@@ -1,0 +1,35 @@
+{
+    "questions": [
+        {
+            "question": "What is this?",
+            "category": "General",
+            "answer": "Hi {name},\nThis bot's purpose is to answer frequently asked questions about modding KTANE. Its goal is to alleviate answering duplicate questions in <#{modCreationId}> and <#{repoDiscussionId}>. Please try to see if your question(s) are answered here before asking there. Navigate through the categories below to see which section your question falls under. Please report any bugs or suggestions about the bot via a [github issue](https://github.com/BlckHawker/KTANE-FAQ-Bot/issues).",
+            "commandName": "help"
+        },
+        {
+            "question": "I have a question that is not answered here. What should I do?",
+            "category": "General",
+            "answer": "First, verify that your question has truly not been answered here. Sometimes, we gloss things over at a first glance. If the question still hasn’t been answered, ask it in <#{modCreationId}>, but be specific as it makes other people help you quicker.",
+            "commandName": ""
+        }
+    ],
+
+    "categories": [
+        {
+            "name": "General",
+            "description": "General questions about the bot"
+        },
+        {
+            "name": "Getting Started",
+            "description": "Set up questions getting into modding."
+        },
+        {
+"name": "Manual",
+            "description": "Questions related to manuals and their publication."
+        },
+        {
+            "name": "Common Errors",
+            "description": "Common problems when creating a mod"
+        }
+    ]
+}

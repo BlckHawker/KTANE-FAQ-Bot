@@ -41,8 +41,24 @@ const addNewServer = (serverId) => {
     writeData(data);
 }
 
+//replace placeholders text with their actual data
+const replacePlaceholders = (text, args = {}) => {
+    //{name} replaced with the user's username
+    text = text.replaceAll("{name}", args.name);
+
+    //{modCreationId} replaced with the id
+    text = text.replaceAll("{modCreationId}", args.modCreationId);
+
+    //{repoDiscussionId} replaced with the id
+    text = text.replaceAll("{repoDiscussionId}", args.repoDiscussionId);
+
+    return text;
+
+}
+
 module.exports = {
     writeData,
     getDataServerObject,
-    addNewServer
+    addNewServer,
+    replacePlaceholders
 }

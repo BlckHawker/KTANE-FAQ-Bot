@@ -22,7 +22,7 @@ module.exports = async ({interaction, embeds, time, introMessage}) => {
         }
 
         if(embeds.length === 1) {
-            return await interaction.editReply({embeds: embeds, components: [], fetchReply: true });
+            return await interaction.editReply({content: introMessage, embeds: embeds, components: [], fetchReply: true });
         }
 
         let index = 0;
@@ -113,6 +113,6 @@ module.exports = async ({interaction, embeds, time, introMessage}) => {
     }
 
     catch (e) {
-        console.log("Error: " + e);
+        console.log("Error making pagination: " + e);
     }
 }
