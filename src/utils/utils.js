@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const dataFileName = '../data.json';
 const data = require(dataFileName);
+const questionJSON = require('../questions.json');
 //write to the data json
 const writeData = (data) => {
     fs.writeFile(path.join(__dirname, dataFileName), JSON.stringify(data, null, 2), (err) => {
@@ -56,9 +57,33 @@ const replacePlaceholders = (text, args = {}) => {
 
 }
 
+//helper function that separates categories/questions into groups
+const makeGroups = (arr) => {
+    const groups = [];
+    for(const text of arr) {
+        //if groups is an empty arr, populate the first element as an array with the first text object
+        if (groups.length === 0) {
+            groups.push([text]);
+        }
+
+        //Otherwise, check if the last element of arr is "full"
+        else if (groups[groups.length - 1].length >= questionJSON["questionsPerPage"]) {
+            // if it is, make a new array element
+            groups.push([text]);
+        }
+
+        else {
+            groups[groups.length - 1].push(text);
+        }
+    }
+
+    return groups;
+}
+
 module.exports = {
     writeData,
     getDataServerObject,
     addNewServer,
-    replacePlaceholders
+    replacePlaceholders,
+    makeGroups
 }

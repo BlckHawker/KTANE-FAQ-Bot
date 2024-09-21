@@ -1,4 +1,5 @@
 {
+    "questionsPerPage": 5,
     "questions": [
         {
             "question": "What is this?",
@@ -10,7 +11,7 @@
             "question": "I have a question that is not answered here. What should I do?",
             "category": "General",
             "answer": "First, verify that your question has truly not been answered here. Sometimes, we gloss things over at a first glance. If the question still hasn’t been answered, ask it in <#{modCreationId}>, but be specific as it makes other people help you quicker.",
-            "commandName": ""
+            "commandName": "question-not-here"
         }
     ],
 

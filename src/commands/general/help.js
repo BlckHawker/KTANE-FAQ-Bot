@@ -32,33 +32,15 @@ module.exports = {
         //get the question object
         const questionObj = questionJSON["questions"].find(obj => obj.commandName === "help");
 
-
-        const categories = [];
-
-        for (const category of questionJSON["categories"]) {
-
-            //if categories is an empty arr, populate the first element as an array with the first category object
-            if (categories.length === 0) {
-                categories.push([category]);
-            }
-
-            //Otherwise, check if the last element of category is "full"
-            else if (categories[categories.length - 1].length >= categoriesPerPage) {
-                // if it is, make a new array element
-                categories.push([category]);
-            }
-
-            else {
-                categories[categories.length - 1].push(category);
-            }
-        }
+        //separate the questions into groups 
+        const groups = utils.makeGroups(questionJSON["categories"]);
 
         const introMessage = utils.replacePlaceholders(questionObj.answer, { name: interaction.user.globalName, modCreationId: server.modCreationId, repoDiscussionId: server.repoDiscussionId })
 
         const embeds = [];
-        for (let i = 0; i < categories.length; i++) {
+        for (let i = 0; i < groups.length; i++) {
             //make the page description a list of the categories and their description
-            let description = categories[i].map(category => `- **/${category.name.toLowerCase().replaceAll(" ", "-")}**: ${category.description}`).join("\n");
+            let description = groups[i].map(category => `- **/${category.name.toLowerCase().replaceAll(" ", "-")}**: ${category.description}`).join("\n");
             const embed = new EmbedBuilder().setDescription(description);
 
             embeds.push(embed);
