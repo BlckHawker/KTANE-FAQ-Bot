@@ -12,8 +12,12 @@ const writeData = (data) => {
 //get a server object based on the id
 const getDataServerObject = (serverId) => {
 
+    if(!data.servers) {
+        return undefined;
+    }
     const serverObjIndex = data.servers.findIndex(obj => obj.serverId === serverId);
-    if(serverObjIndex) {
+    
+    if (serverObjIndex === -1) {
         return undefined;
     }
     const server = data.servers[serverObjIndex];
@@ -21,7 +25,25 @@ const getDataServerObject = (serverId) => {
     return { serverObjIndex, server };
 }
 
+const addNewServer = (serverId) => {
+    
+    //todo if server doesn't exist, make a new one with this id
+    if(!data.servers) {
+        data.servers = [{ serverId }];
+    }
+
+    //todo if the server does exist, add a new object
+    else {
+        data.servers.push({ serverId });
+    }
+
+    writeData(data);
+}
+
+
+
 module.exports = {
     writeData,
-    getDataServerObject
+    getDataServerObject,
+    addNewServer
 }
