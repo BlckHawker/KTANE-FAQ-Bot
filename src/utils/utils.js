@@ -1,5 +1,6 @@
+const { EmbedBuilder } = require('discord.js');
 const questionJSON = require('../questions.json');
-
+const pagination = require('./pagination');
 const placeholderInfo = {
     modCreationId: "201105291830493193",
     repoDiscussionId: "640557658482540564",
@@ -18,6 +19,19 @@ const replacePlaceholders = (text, name = "User") => {
     //{repoDiscussionId} replaced with the id
     text = text.replaceAll("{repoDiscussionId}", placeholderInfo.repoDiscussionId);
 
+    //replace markdown hyperlinks with <> so the embeds don't appear at the bottom of the message
+
+	const gmRegex = /\[(.+)\]\((.+)\)/gm;
+	const regex = /\[(.+)\]\((.+)\)/;
+
+	const matches = text.match(gmRegex);
+
+	if(matches) {
+		for(const str of matches) {
+			const match = str.match(regex);
+			text = text.replaceAll(`[${match[1]}](${match[2]})`, `[${match[1]}](<${match[2]}>)`)
+		}
+	}
     return text;
 
 }
@@ -45,7 +59,59 @@ const makeGroups = (arr) => {
     return groups;
 }
 
+//helper method to get all the questions (and their command names) given a category
+function getAllCommandsByCategory(interaction, categoryId) {
+
+    const categoryObj = questionJSON["categories"].find(category => category.id === categoryId);
+    const questions = questionJSON["questions"].filter(q => q.categoryId === categoryObj.id);
+
+    //separate the questions into groups 
+    const groups = makeGroups(questions);
+
+    const introMessage = `Here are the questions under the **${categoryObj.name}** category`;
+        const embeds = [];
+        for (let i = 0; i < groups.length; i++) {
+            //make the page description a list of the question and their command
+            let description = groups[i].map(q => `- **${q.question}** - /${q.commandName}`).join('\n')
+            const embed = new EmbedBuilder().setDescription(description);
+
+            embeds.push(embed);
+        }
+
+    pagination({ introMessage, interaction, embeds });
+}
+
+async function getQuestion(interaction, commandId) {
+
+    const desiredObj = questionJSON["questions"].find(q => q.commandId === commandId);
+
+    const messages = [];
+    //presumably break the answers into different messages
+    const answers = replacePlaceholders(desiredObj.answer).split('this should always an element of one arr');
+    for(let i = 0; i < answers.length; i++) {
+        if(i === 0) {
+            messages.push(`## ${desiredObj.question}\n${answers[i]}`);
+        } 
+        else {
+            messages.push(answers[i]);
+        }
+    }
+
+    //after sending each message, send any images that are possibly attached
+    for(let i = 0; i < messages.length; i++) {
+        
+        await interaction.channel.send(messages[i]);
+        
+        const files = desiredObj.images.filter(img => img.index === i).map(obj => `src/img/${obj.name}`);
+        if(files.length > 0) {
+            await interaction.channel.send({files: files});
+        }
+    }
+}
+
 module.exports = {
     replacePlaceholders,
     makeGroups,
+    getAllCommandsByCategory,
+    getQuestion
 }
