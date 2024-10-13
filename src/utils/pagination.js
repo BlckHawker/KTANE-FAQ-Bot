@@ -2,7 +2,7 @@ const {ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType} = require('d
 
 
 function pageError(str) {
-    return new Error(`There was an error with Pagination ${str}. Please contact the developer(s)`);
+    return new Error(`There was an error with Pagination: ${str}. Please contact the developer(s)`);
 }
 
 module.exports = async ({interaction, embeds, time, introMessage}) => {
