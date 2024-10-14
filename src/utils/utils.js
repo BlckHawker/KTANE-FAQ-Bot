@@ -9,9 +9,6 @@ const placeholderInfo = {
 
 }
 
-//todo make command for categories
-//todo: make subcommands of each question
-
 //replace placeholders text with their actual data
 const replacePlaceholders = (text, name = "User") => {
 

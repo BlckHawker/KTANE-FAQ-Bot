@@ -5,7 +5,7 @@ const questionJSON = require('../../questions.json');
 function makeSlashCommand() {
 	const slashCommand = new SlashCommandBuilder()
 	.setName('questions')
-	.setDescription('Test command that provides information about the user.')
+	.setDescription('Ask a question related to ktane modding')
 
 	const max = 100;
 	for(const questionObj of questionJSON["questions"]) {
@@ -23,7 +23,6 @@ function makeSlashCommand() {
 	return slashCommand;
 }
 
-//todo dynamically make these slash commands
 module.exports = {
 	data: makeSlashCommand(),
 
