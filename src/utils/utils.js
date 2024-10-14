@@ -5,7 +5,10 @@ const placeholderInfo = {
     modCreationId: "201105291830493193",
     repoDiscussionId: "640557658482540564",
     repoRequestsId: "612414629179817985",
-    logBotId: "317798455110139916"
+    logBotId: "317798455110139916",
+    ktaneContentRepositoryLink: "[Ktane Content repository](<https://github.com/Timwi/KtaneContent>)",
+    manualRepositoryLink: "[Repository of Manual Pages](<https://ktane.timwi.de>)",
+    maintainerResponsibilities: "[Repo Maintainer Responsibilities](<https://docs.google.com/document/d/10rabFJES6avb8ime3Cw5LCd9p0663PbqVqzUrfehYac/edit?usp=sharing>)",
 
 }
 
@@ -16,15 +19,21 @@ const replacePlaceholders = (text, name = "User") => {
     //{name} replaced with the user's username
     text = text.replaceAll("{name}", name);
 
-    //{modCreationId} replaced with the id
+    //replace channel ids
+
     text = text.replaceAll("{modCreationId}", placeholderInfo.modCreationId);
 
-    //{repoDiscussionId} replaced with the id
     text = text.replaceAll("{repoDiscussionId}", placeholderInfo.repoDiscussionId);
 
     text = text.replaceAll("{repoRequestsId}", placeholderInfo.repoRequestsId);
 
-    //todo replace common links like "ktane content" and "repository of manuals"
+    //replace links
+
+    text = text.replaceAll("{ktaneContentRepositoryLink}", placeholderInfo.ktaneContentRepositoryLink);
+
+    text = text.replaceAll("{manualRepositoryLink}", placeholderInfo.manualRepositoryLink);
+
+    text = text.replaceAll("{maintainerResponsibilities}", placeholderInfo.maintainerResponsibilities);
 
     //ping logbot
     text = text.replaceAll("{logBotId}", placeholderInfo.logBotId);
