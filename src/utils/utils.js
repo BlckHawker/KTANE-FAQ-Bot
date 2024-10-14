@@ -116,26 +116,18 @@ function getAllCommandsByCategory(interaction, categoryId) {
 
 async function sendQuestion(interaction, commandId) {
 
-    //todo: possibly combine these for loops into one
     const desiredObj = questionJSON["questions"].find(q => q.commandId === commandId);
+    //break the answer into different messages
 
-    //break the answers into different messages
-    const messages = [];
     const answers = replacePlaceholders(desiredObj.answer).split('{breakMessage}');
     for(let i = 0; i < answers.length; i++) {
         if(i === 0) {
-            messages.push(`## ${desiredObj.question}\n${answers[i]}`);
+            await interaction.channel.send(`## ${desiredObj.question}\n${answers[i]}`);
         } 
         else {
-            messages.push(answers[i]);
+            await interaction.channel.send(answers[i]);
         }
-    }
 
-    //after sending each message, send any images that are possibly attached
-    for(let i = 0; i < messages.length; i++) {
-        
-        await interaction.channel.send(messages[i]);
-        
         if(desiredObj.images) {
             const files = desiredObj.images.filter(img => img.index === i).map(obj => `src/img/${obj.name}`);
             if(files.length > 0) {
