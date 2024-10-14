@@ -1,39 +1,87 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { sendQuestion } = require('../../utils/utils.js');
-// const testImage = require("../../img/unity circle.png")
-// const img = require();
-
-const imgPath = 'src/img/';
+const questionJSON = require('../../questions.json');
+//todo dynamically make these slash commands
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('questions')
-		.setDescription('Test command that provides information about the user.'),
+		.setDescription('Test command that provides information about the user.')
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('help')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('question-not-here')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('modding-start')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('c-sharp-tutorials')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('mod-tutorials')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('shortcut')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('github')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('mod-reference')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('create-manual')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('add-manual')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('change-manual')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('request-delay')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('become-maintainer')
+				.setDescription('This does not matter'))				
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('mod-not-working')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('text-see-through')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('mod-building-error')
+				.setDescription("This does not matter"))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('no-sound')
+				.setDescription('This does not matter'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('on-interact-delegate')
+				.setDescription('This does not matter')),
+
 	async execute(client, interaction) {
-		//commandId with issues
-		/**
-		 * modding-start: too long
-		 * X mod-reference: Add image
-		 * create-manual: too long
-		 * add-manual: too long
-		 * change-manual:  images not appearing correctly
-		 * become-maintainer: 1. {solve} 2. add commands
-		 * mod-not-working: 1. images not working 2. add commands 3. identation
-		 * mod-building-error: 1. images 2. not an issue with the command itself, but don't need it to be an ordered list
-		 * no-sound: 1. images 2. commands
-		 * on-interact-delegate: 1. links went through 2. images
-		 */
-
-		/**
-		 * What to fix in order
-		 * 1. Images not appear, send answer into different messages (use a special character to know when the end of the message is). Give the images a index of which message they need to be a part of
-		 * 2. Too long of messages. Manually add break message
-		 * 3. commands
-		 * 5. formatting link
-		 */
-
-
-		
-		sendQuestion(interaction, "on-interact-delegate");
-		//await interaction.reply(text);
+		const commandName = interaction.options.getSubcommand();
+		const commandId = questionJSON["questions"].find(q => q.commandName === commandName).commandId;
+		sendQuestion(interaction, commandId);
 	},
 };
