@@ -4,6 +4,7 @@ const pagination = require('./pagination');
 const placeholderInfo = {
     modCreationId: "201105291830493193",
     repoDiscussionId: "640557658482540564",
+    repoRequestsId: "612414629179817985"
 
 }
 //replace placeholders text with their actual data
@@ -18,6 +19,13 @@ const replacePlaceholders = (text, name = "User") => {
 
     //{repoDiscussionId} replaced with the id
     text = text.replaceAll("{repoDiscussionId}", placeholderInfo.repoDiscussionId);
+
+    text = text.replaceAll("{repoRequestsId}", placeholderInfo.repoRequestsId);
+
+    //todo replace common links like "ktane content" and "repository of manuals"
+
+
+    
 
     //ping logbot
     text = text.replaceAll("{logBotId}", '317798455110139916');

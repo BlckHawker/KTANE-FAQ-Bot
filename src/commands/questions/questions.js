@@ -33,7 +33,7 @@ module.exports = {
 
 		//todo: manually add <> so embeds don't appear
 		
-		getQuestion(interaction, "create-manual");
+		getQuestion(interaction, "become-maintainer");
 		//await interaction.reply(text);
 	},
 };
