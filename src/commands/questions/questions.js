@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { getQuestion } = require('../../utils/utils.js');
+const { sendQuestion } = require('../../utils/utils.js');
 // const testImage = require("../../img/unity circle.png")
 // const img = require();
 
@@ -31,9 +31,9 @@ module.exports = {
 		 * 5. formatting link
 		 */
 
-		//todo: manually add <> so embeds don't appear
+
 		
-		getQuestion(interaction, "become-maintainer");
+		sendQuestion(interaction, "on-interact-delegate");
 		//await interaction.reply(text);
 	},
 };

@@ -98,37 +98,42 @@
         {
             "question": "My mod works fine in Unity, but doesn’t in the game.",
             "categoryId": "errors",
-            "answer": "Open the log in the [Logfile Analyzer](https://ktane.timwi.de/More/Logfile%20Analyzer.html) and check if there is a button in the top left called “View Exceptions”. If there is, clicking on said button will show you an exception that was thrown while the mod was running. Fixing the exception will most likely make the mod work in the game.\nSome common exceptions:\n- **Exception: NullReferenceException: Object reference not set to an instance of an object at: SelectableManager.HandleInteract()**\n- Verify that none of your buttons (objects that have the KMSelectable component, excluding the mod itself) have any children in the inspector.  The children variable should have a size of 0. The only time your buttons should have a size greater than 0 is if their OnInteract delegate returns true. See {command-on-interact-delegate} for more info.\n- **Good**\n![image2](https: //github.com/user-attachments/assets/006df50e-9e70-490b-8778-62ed8ab44f1a)\n- **Bad**\n![image2](https: //github.com/user-attachments/assets/ffe5d201-2089-4f93-a323-1d63299c6b56)\nOnce you fix the issue(s), update the prefab and rebuild your mod and retest. If you don’t see anything wrong with your project in Unity, update the prefab and rebuild anyway. It’s possible that you changed something without building again. If you are still having issues, ask for help in <#{modCreationId}>.",
+            "answer": "Open the log in the [Logfile Analyzer](https://ktane.timwi.de/More/Logfile%20Analyzer.html) and check if there is a button in the top left called “View Exceptions”. If there is, clicking on said button will show you an exception that was thrown while the mod was running. Fixing the exception will most likely make the mod work in the game.\nSome common exceptions:\n- **Exception: NullReferenceException: Object reference not set to an instance of an object at: SelectableManager.HandleInteract()**\n    - Verify that none of your buttons (objects that have the KMSelectable component, excluding the mod itself) have any children in the inspector.  The children variable should have a size of 0. The only time your buttons should have a size greater than 0 is if their OnInteract delegate returns true. See {on-interact-delegate} for more info.    \n**Good**{breakMessage}\n**Bad**{breakMessage}\nOnce you fix the issue(s), update the prefab and rebuild your mod and retest. If you don’t see anything wrong with your project in Unity, update the prefab and rebuild anyway. It’s possible that you changed something without building again. If you are still having issues, ask for help in <#{modCreationId}>.",
             "commandId": "mod-not-working",
-            "commandName": "mod-not-working"
+            "commandName": "mod-not-working",
+            "images": [{"name": "children.png", "index": 1}, {"name": "noChildren.png", "index": 0}]
         },
         {
             "question": "My text is going through the back of the bomb",
             "categoryId": "errors",
-            "answer": "* [Text Version of answer](https://discord.com/channels/160061833166716928/726791283007291474/726794741168996443)\n* [Video Version of answer](https://www.youtube.com/watch?v=YobuGSBl3i0&t=1554s)",
+            "answer": "* [Text Version of answer](<https://discord.com/channels/160061833166716928/726791283007291474/726794741168996443>)\n* [Video Version of answer](<https://www.youtube.com/watch?v=YobuGSBl3i0&t=1554s>)",
             "commandId": "text-see-through",
             "commandName": "text-see-through"
         },
         {
             "question": "I’m trying to build my mod, but I'm getting the error- Failed to build AssetBundle: No assets have been tagged for inclusion in the mod.bundle AssetBundle.",
             "categoryId": "errors",
-            "answer": "1. Select your prefab in the project window. In the bottom right corner, you will see a dropdown with the name `AssetBundle`, verify the selected option is `mod.bundle`. If you do not see it, make it. You should not see the error building again.\n![image2](https://github.com/user-attachments/assets/2ece8eeb-fb9f-441a-b3fe-ede921c38fd8)",
+            "answer": "Select your prefab in the project window. In the bottom right corner, you will see a dropdown with the name `AssetBundle`, verify the selected option is `mod.bundle`. If you do not see it, make it. You should not see the error building again.",
             "commandId": "mod-building-error",
-            "commandName": "mod-building-error"
+            "commandName": "mod-building-error",
+            "images": [{"name": "modBundle.png", "index": 0}]
         },
         {
             "question": "I can’t hear my sound effects",
             "category": "errors",
-            "answer": "* **If you can’t hear it in the Unity, but can in the game**, open the TestHarness’ inspector, and drag/drop your clips inside the variable that says “Audio Clips”\n![image8](https://github.com/user-attachments/assets/7a6515fb-4a73-4ecc-9671-28ad627043b4)\n* **If you can’t hear it in the game, but can in Unity, **verify that the sound effects are added in `mod.bundle` The steps to do so are the same as adding the prefab to `mod.bundle`. See {command-mod-building-error} for more information.",
+            "answer": "* **If you can’t hear it in the Unity, but can in the game**, open the TestHarness’ inspector, and drag/drop your clips inside the variable that says “Audio Clips”{breakMessage}* **If you can’t hear it in the game, but can in Unity, **verify that the sound effects are added in `mod.bundle` The steps to do so are the same as adding the prefab to `mod.bundle`. See {mod-building-error} for more information.",
             "commandId": "no-sound",
-            "commandName": "no-sound"
+            "commandName": "no-sound",
+            "images": [{"name": "audio clips.png", "index": 0}]
         },
         {
             "question": "Why do I have to return true or false while adding a delegate to KMSelectable.OnInteract?",
             "categoryId": "misc",
-            "answer": "The [wiki](https://github.com/Qkrisi/ktanemodkit/wiki/KMSelectable) states the return value of the delegate specifies “ whether it should drill into children”. If you think of the module as a [tree](https://en.wikipedia.org/wiki/Tree_(abstract_data_type)#:~:text=In%20computer%20science%2C%20a%20tree,a%20set%20of%20connected%20nodes.), with the module being the root node, you can move to and from other children. A good example of this is the mod [Quadruple Simpleton Squared](https://github.com/KTANE-MODS/Quadruple-Simpleton-Squared). The root node is the mod itself, but if we select the top left quadrant of the mod, that will be the current node since the delegate returns true. If we select the top left button, the interaction will occur but the current node will still be the top left quadrant since the delegate of the button returns false. When we right click, the current node becomes the current node’s parent. In this case, the current node would be the module again.\nIf you do not want any sections of your mod, all your buttons work as standard buttons, then you should have all of your KMSelectable OnInteract delegates return false and have no children. You can read a discussion about this [here](https://discord.com/channels/160061833166716928/201105291830493193/1289045915117551637)\n![image2](https://github.com/user-attachments/assets/b09c52bb-4292-4f66-af45-9eb6df11ea11)",
+            "answer": "The [wiki](<https://github.com/Qkrisi/ktanemodkit/wiki/KMSelectable>) states the return value of the delegate specifies “ whether it should drill into children”. If you think of the module as a [tree](<https://en.wikipedia.org/wiki/Tree_(abstract_data_type)#:~:text=In%20computer%20science%2C%20a%20tree,a%20set%20of%20connected%20nodes.>), with the module being the root node, you can move to and from other children. A good example of this is the mod [Quadruple Simpleton Squared](<https://github.com/KTANE-MODS/Quadruple-Simpleton-Squared>). The root node is the mod itself, but if we select the top left quadrant of the mod, that will be the current node since the delegate returns true. If we select the top left button, the interaction will occur but the current node will still be the top left quadrant since the delegate of the button returns false. When we right click, the current node becomes the current node’s parent. In this case, the current node would be the module again.\nIf you do not want any sections of your mod, all your buttons work as standard buttons, then you should have all of your KMSelectable OnInteract delegates return false and have no children. You can read a discussion about this [here](<https://discord.com/channels/160061833166716928/201105291830493193/1289045915117551637>).",
             "commandId": "on-interact-delegate",
-            "commandName": "on-interact-delegate"
+            "commandName": "on-interact-delegate",
+            "images": [{"name": "tree.png", "index": 0}]
+
         }
     ],
     "categories": [

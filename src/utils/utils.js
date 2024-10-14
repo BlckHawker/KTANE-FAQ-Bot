@@ -4,9 +4,14 @@ const pagination = require('./pagination');
 const placeholderInfo = {
     modCreationId: "201105291830493193",
     repoDiscussionId: "640557658482540564",
-    repoRequestsId: "612414629179817985"
+    repoRequestsId: "612414629179817985",
+    logBotId: "317798455110139916"
 
 }
+
+//todo make command for categories
+//todo: make subcommands of each question
+
 //replace placeholders text with their actual data
 const replacePlaceholders = (text, name = "User") => {
 
@@ -24,11 +29,8 @@ const replacePlaceholders = (text, name = "User") => {
 
     //todo replace common links like "ktane content" and "repository of manuals"
 
-
-    
-
     //ping logbot
-    text = text.replaceAll("{logBotId}", '317798455110139916');
+    text = text.replaceAll("{logBotId}", placeholderInfo.logBotId);
 
     
     //get rid of the any command ids with their actual name
@@ -48,17 +50,20 @@ const replacePlaceholders = (text, name = "User") => {
 }
 
 //helper function that separates categories/questions into groups
+
+
+/**
+ * separates categories or questions into groups
+ * @param {string[]} arr The collection of objects
+ * @returns {string[][]} The collection of objects separated into groups
+ */
 const makeGroups = (arr) => {
     const groups = [];
     for(const text of arr) {
         //if groups is an empty arr, populate the first element as an array with the first text object
-        if (groups.length === 0) {
-            groups.push([text]);
-        }
+        //Otherwise, check if the last element of arr is "full". If it is, make a new array element
 
-        //Otherwise, check if the last element of arr is "full"
-        else if (groups[groups.length - 1].length >= questionJSON["questionsPerPage"]) {
-            // if it is, make a new array element
+        if (groups.length === 0 || groups[groups.length - 1].length >= questionJSON["questionsPerPage"]) {
             groups.push([text]);
         }
 
@@ -70,7 +75,11 @@ const makeGroups = (arr) => {
     return groups;
 }
 
-//helper method to get all the questions (and their command names) given a category
+/**
+ * Sends an interactive embedded message of all the questions within a category
+ * @param interaction The interaction object
+ * @param categoryId The id of the category
+ */
 function getAllCommandsByCategory(interaction, categoryId) {
 
     const categoryObj = questionJSON["categories"].find(category => category.id === categoryId);
@@ -92,12 +101,20 @@ function getAllCommandsByCategory(interaction, categoryId) {
     pagination({ introMessage, interaction, embeds });
 }
 
-async function getQuestion(interaction, commandId) {
 
+/**
+ * Sends the answer of a specific question
+ * @param interaction The interaction object
+ * @param commandId The id of the question that is being asked
+ */
+
+async function sendQuestion(interaction, commandId) {
+
+    //todo: possibly combine these for loops into one
     const desiredObj = questionJSON["questions"].find(q => q.commandId === commandId);
 
+    //break the answers into different messages
     const messages = [];
-    //presumably break the answers into different messages
     const answers = replacePlaceholders(desiredObj.answer).split('{breakMessage}');
     for(let i = 0; i < answers.length; i++) {
         if(i === 0) {
@@ -119,7 +136,6 @@ async function getQuestion(interaction, commandId) {
                 await interaction.channel.send({files: files});
             }
         }
-        
     }
 }
 
@@ -127,5 +143,5 @@ module.exports = {
     replacePlaceholders,
     makeGroups,
     getAllCommandsByCategory,
-    getQuestion
+    sendQuestion
 }
