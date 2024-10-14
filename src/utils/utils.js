@@ -19,19 +19,22 @@ const replacePlaceholders = (text, name = "User") => {
     //{repoDiscussionId} replaced with the id
     text = text.replaceAll("{repoDiscussionId}", placeholderInfo.repoDiscussionId);
 
-    //replace markdown hyperlinks with <> so the embeds don't appear at the bottom of the message
+    //ping logbot
+    text = text.replaceAll("{logBotId}", '317798455110139916');
 
-	const gmRegex = /\[(.+)\]\((.+)\)/gm;
-	const regex = /\[(.+)\]\((.+)\)/;
+    
+    //get rid of the any command ids with their actual name
+    const commandObjects = questionJSON["questions"].map(q => {return {id: q.commandId, name: q.commandName}});
+    const categoryObject = questionJSON["categories"].map(q => {return {id: q.id, commandName: q.commandName, name: q.name}});
+    for(const obj of commandObjects) {
+        text = text.replaceAll(`{${obj.id}}`, `**${obj.name}** command`);
+    }
 
-	const matches = text.match(gmRegex);
+    for(const obj of categoryObject) {
+        text = text.replaceAll(`{${obj.id}}`, `**${obj.name}** commands (**${obj.commandName}**)`);
+    }
 
-	if(matches) {
-		for(const str of matches) {
-			const match = str.match(regex);
-			text = text.replaceAll(`[${match[1]}](${match[2]})`, `[${match[1]}](<${match[2]}>)`)
-		}
-	}
+
     return text;
 
 }
@@ -87,7 +90,7 @@ async function getQuestion(interaction, commandId) {
 
     const messages = [];
     //presumably break the answers into different messages
-    const answers = replacePlaceholders(desiredObj.answer).split('this should always an element of one arr');
+    const answers = replacePlaceholders(desiredObj.answer).split('{breakMessage}');
     for(let i = 0; i < answers.length; i++) {
         if(i === 0) {
             messages.push(`## ${desiredObj.question}\n${answers[i]}`);
@@ -102,10 +105,13 @@ async function getQuestion(interaction, commandId) {
         
         await interaction.channel.send(messages[i]);
         
-        const files = desiredObj.images.filter(img => img.index === i).map(obj => `src/img/${obj.name}`);
-        if(files.length > 0) {
-            await interaction.channel.send({files: files});
+        if(desiredObj.images) {
+            const files = desiredObj.images.filter(img => img.index === i).map(obj => `src/img/${obj.name}`);
+            if(files.length > 0) {
+                await interaction.channel.send({files: files});
+            }
         }
+        
     }
 }
 
